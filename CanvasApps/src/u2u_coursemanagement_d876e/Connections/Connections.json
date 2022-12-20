@@ -1,0 +1,38 @@
+{
+  "dc878831-a136-4504-a205-ff9d638d17d8": {
+    "connectionParameters": {
+      "sku": "Enterprise"
+    },
+    "connectionRef": {
+      "apiTier": "Standard",
+      "displayName": "SharePoint",
+      "iconUri": "https://connectoricons-prod.azureedge.net/u/juanq/gateway/greyhound/3000.150.11/1.0.1613.3116/sharepointonline/icon.png",
+      "id": "/providers/microsoft.powerapps/apis/shared_sharepointonline",
+      "parameterHints": {},
+      "parameterHintsV2": {}
+    },
+    "datasets": {
+      "https://u2u365.sharepoint.com/teams/uppadev2": {
+        "datasetOverride": {
+          "environmentVariableName": "u2u_SPCourseSite",
+          "name": "https://u2u365.sharepoint.com/teams/uppadev2"
+        },
+        "dataSources": {
+          "SPCourseList": {
+            "tableName": "349dfa24-ced6-4978-90bb-2cedf6c9c130",
+            "tableNameOverride": {
+              "environmentVariableName": "u2u_SPCourseList",
+              "name": "349dfa24-ced6-4978-90bb-2cedf6c9c130"
+            }
+          }
+        }
+      }
+    },
+    "dataSources": [
+      "SPCourseList"
+    ],
+    "dependencies": {},
+    "dependents": [],
+    "id": "dc878831-a136-4504-a205-ff9d638d17d8"
+  }
+}

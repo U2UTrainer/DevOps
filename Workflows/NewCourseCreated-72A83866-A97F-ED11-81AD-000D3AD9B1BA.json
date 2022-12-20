@@ -1,0 +1,109 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_office365_1": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "u2u_Office365EMailCR"
+        },
+        "api": {
+          "name": "shared_office365"
+        }
+      },
+      "shared_sharepointonline": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "u2u_sharedsharepointonline_9c0d7"
+        },
+        "api": {
+          "name": "shared_sharepointonline"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "SPCourseSite (u2u_SPCourseSite)": {
+          "defaultValue": "https://u2u365.sharepoint.com/teams/uppadev2",
+          "type": "String",
+          "metadata": {
+            "schemaName": "u2u_SPCourseSite"
+          }
+        },
+        "SPCourseList (u2u_SPCourseList)": {
+          "defaultValue": "349dfa24-ced6-4978-90bb-2cedf6c9c130",
+          "type": "String",
+          "metadata": {
+            "schemaName": "u2u_SPCourseList"
+          }
+        },
+        "ApproverName (u2u_ApproverName)": {
+          "defaultValue": "jurgen@u2u.be",
+          "type": "String",
+          "metadata": {
+            "schemaName": "u2u_ApproverName"
+          }
+        }
+      },
+      "triggers": {
+        "When_an_item_is_created": {
+          "recurrence": {
+            "interval": 1,
+            "frequency": "Minute"
+          },
+          "splitOn": "@triggerOutputs()?['body/value']",
+          "metadata": {
+            "operationMetadataId": "2682ce27-0975-45c9-846d-94055b12546d"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_sharepointonline",
+              "operationId": "GetOnNewItems",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+            },
+            "parameters": {
+              "dataset": "@parameters('SPCourseSite (u2u_SPCourseSite)')",
+              "table": "@parameters('SPCourseList (u2u_SPCourseList)')"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        }
+      },
+      "actions": {
+        "Send_an_email_(V2)": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "23a94f6a-69f0-489f-a7ee-d34c5a42bf8f"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_office365_1",
+              "operationId": "SendEmailV2",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
+            },
+            "parameters": {
+              "emailMessage/To": "jurgen@u2u.be",
+              "emailMessage/Subject": "New course created",
+              "emailMessage/Body": "<p>new course was created<br>\n<br>\nApprover Name:@{parameters('ApproverName (u2u_ApproverName)')}</p>",
+              "emailMessage/Importance": "Normal"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        }
+      }
+    },
+    "templateName": ""
+  },
+  "schemaVersion": "1.0.0.0"
+}
